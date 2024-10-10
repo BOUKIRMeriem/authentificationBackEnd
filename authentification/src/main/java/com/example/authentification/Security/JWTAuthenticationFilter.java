@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter { //vérifie chaque requête HTTP pour voir si elle contient un token JWT . Si le token est présent et valide, elle authentifie l'utilisateur.
@@ -24,7 +23,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter { //vérifie c
         String token=getJWTFromRequest(request);
         if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)){
             String username=tokenGenerator.getUsernameFromJWT(token);
-
             UserDetails userDetails=customUserDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,
                     userDetails.getAuthorities());
@@ -33,11 +31,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter { //vérifie c
         }
         filterChain.doFilter(request,response);
     }
-
     private String getJWTFromRequest(HttpServletRequest request){
         String bearerToken = request.getHeader("Authorization");
-
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")){
+         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")){
             return bearerToken.substring(7,bearerToken.length());
         }
         return null;
